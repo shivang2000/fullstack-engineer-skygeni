@@ -14,7 +14,6 @@ const CustomBarChart = () => {
     const fetchData = async () => {
       const response = await fetch("/api/bar-chart-data");
       const result = await response.json();
-      console.log(result.data);
       setData(result.data);
     };
 
@@ -162,7 +161,10 @@ const CustomBarChart = () => {
                 dominantBaseline="middle"
               >
                 <tspan
-                  x={xScale(d.closed_fiscal_quarter) + xScale.bandwidth() / 2}
+                  x={
+                    (xScale(d.closed_fiscal_quarter) ?? 0) +
+                    xScale.bandwidth() / 2
+                  }
                   fontWeight={800}
                   fill="white"
                   dy="0rem"
@@ -174,7 +176,10 @@ const CustomBarChart = () => {
                   K
                 </tspan>
                 <tspan
-                  x={xScale(d.closed_fiscal_quarter) + xScale.bandwidth() / 2}
+                  x={
+                    (xScale(d.closed_fiscal_quarter) ?? 0) +
+                    xScale.bandwidth() / 2
+                  }
                   fontWeight={800}
                   fill="white"
                   dy="1.1rem"
@@ -196,7 +201,10 @@ const CustomBarChart = () => {
                 dominantBaseline="middle"
               >
                 <tspan
-                  x={xScale(d.closed_fiscal_quarter) + xScale.bandwidth() / 2}
+                  x={
+                    (xScale(d.closed_fiscal_quarter) ?? 0) +
+                    xScale.bandwidth() / 2
+                  }
                   fontWeight={800}
                   fill="white"
                   dy="0rem"
@@ -208,7 +216,10 @@ const CustomBarChart = () => {
                   K
                 </tspan>
                 <tspan
-                  x={xScale(d.closed_fiscal_quarter) + xScale.bandwidth() / 2}
+                  x={
+                    (xScale(d.closed_fiscal_quarter) ?? 0) +
+                    xScale.bandwidth() / 2
+                  }
                   fontWeight={800}
                   fill="white"
                   dy="1.1rem"
@@ -223,20 +234,6 @@ const CustomBarChart = () => {
             </g>
           );
         })}
-        {/* {data.map((d) => console.log(d))} */}
-        {/* {data.map((d) => (
-          <rect
-            key={d.closed_fiscal_quarter}
-            x={xScale(d.closed_fiscal_quarter) || 0}
-            y={yNewScale(
-              d.combined_data.find((cd) => cd.Cust_Type === "Existing Customer")
-                ?.acv ?? 0
-            )}
-            width={xScale.bandwidth()}
-            height={0}
-            fill="#FF8C27"
-          />
-        ))} */}
       </g>
     </svg>
   ) : null;

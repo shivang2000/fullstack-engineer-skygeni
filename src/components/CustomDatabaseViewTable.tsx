@@ -7,10 +7,6 @@ const CustomDatabaseViewTable = async () => {
   const result = await response.json();
   const data: IBarChartSingleData[] = result.data;
 
-  console.log("data", data);
-
-  // const [data, setData] = useState<IBarChartSingleData[]>([]);
-
   return (
     <div className="w-full">
       <table className="w-full border-2 border-solid border-gray-300">

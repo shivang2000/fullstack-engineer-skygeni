@@ -22,7 +22,6 @@ const CustomPieChart = () => {
     const fetchData = async () => {
       const response = await fetch("/api/pie-chart");
       const result = await response.json();
-      console.log("result.data", result.data);
 
       const d = [
         {
@@ -45,11 +44,14 @@ const CustomPieChart = () => {
     fetchData();
   }, []);
 
-  const pieChart = pie().value((d) => d.value)(data);
+  // Fix: Specify the type for pie() to match the data structure
+  const pieChart = pie<{
+    value: number;
+    percentage: number;
+    color: string;
+  }>().value((d) => d.value)(data);
 
-  console.log("asdsadfasdf", data, pieChart);
-
-  return data ? (
+  return data.length > 0 ? (
     <svg width={width + 200} height={height}>
       <text
         x="50%"
@@ -80,16 +82,36 @@ const CustomPieChart = () => {
               .endAngle(d.endAngle)
               .padAngle(d.padAngle);
 
-            const [centroidX, centroidY] = arcData.centroid();
+            // Fix: arcData.centroid expects a DefaultArcObject, not a PieArcDatum.
+            // So, we pass an object with the same angles and radii as arcData.
+            const [centroidX, centroidY] = arcData.centroid({
+              innerRadius: 100,
+              outerRadius: 200,
+              startAngle: d.startAngle,
+              endAngle: d.endAngle,
+              padAngle: d.padAngle,
+            });
 
             const x2 =
               centroidX + (centroidX / Math.abs(centroidX)) * (width / 8);
             const y2 =
               centroidY + (centroidY / Math.abs(centroidY)) * (height / 8);
+            // centroidY + (centroidY / Math.abs(centroidY)) * (height / 8);
 
             return (
               <React.Fragment key={idx}>
-                <path d={arcData()} fill={colors[idx]} />
+                <path
+                  d={
+                    arcData({
+                      innerRadius: 100,
+                      outerRadius: 200,
+                      startAngle: d.startAngle,
+                      endAngle: d.endAngle,
+                      padAngle: d.padAngle,
+                    })!
+                  }
+                  fill={colors[idx]}
+                />
 
                 <line
                   x1={centroidX}
